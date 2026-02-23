@@ -1,0 +1,59 @@
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Continue with Google</title>
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #dfe9f3, #ffffff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass-card {
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: none;
+            background: #4285F4;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="glass-card">
+
+    <h2>Continue with Google</h2>
+
+    <!-- 🔥 THIS FORM IS IMPORTANT -->
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">
+            Login with Google
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>
