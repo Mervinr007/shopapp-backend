@@ -43,16 +43,28 @@ def shop_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
         
     
-@api_view(['GET','POST'])
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def product_list(request):
-   shop_id = request.query_params.get('shop')
-   if shop_id: 
-       products = Product.objects.filter(shop_id=shop_id)
-   else:
-        products = Product.objects.all()
-    
-   serializer = ProductSerializer(products, many=True)
-   return Response(serializer.data)
+
+    if request.method == 'GET':
+        shop_id = request.query_params.get('shop')
+        if shop_id:
+            products = Product.objects.filter(shop_id=shop_id)
+        else:
+            products = Product.objects.all()
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save() 
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET','PUT','DELETE'])
 @permission_classes([IsAuthenticated])
@@ -110,4 +122,10 @@ def register(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def check_auth(request):
+    return Response({
+        "username": request.user.username
+    })
