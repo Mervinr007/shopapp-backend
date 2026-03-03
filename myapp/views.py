@@ -7,6 +7,45 @@ from django.db.models import Count
 from rest_framework import permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
+from rest_framework.views import APIView
+from django.db.models import Q
+
+class GlobalSearchView(APIView):
+
+    def get(self, request):
+        query = request.GET.get('q', '').strip()
+
+        if not query:
+            return Response([])
+
+        products = Product.objects.filter(
+            Q(name__icontains=query)
+        )[:5]
+
+        shops = Shop.objects.filter(
+            Q(name__icontains=query)
+        )[:5]
+
+        results = []
+
+        for p in products:
+            results.append({
+                "type": "product",
+                "id": p.id,
+                "name": p.name,
+                "weight": p.weight
+            })
+
+        for s in shops:
+            results.append({
+                "type": "shop",
+                "id": s.id,
+                "name": s.name
+            })
+
+        return Response(results)
+        
+        
 
 class ShopViewSet(viewsets.ModelViewSet):
     serializer_class = ShopSerializer

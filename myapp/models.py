@@ -12,14 +12,27 @@ class Shop(models.Model):
     def __str__(self):
         return self.name
 
+from django.db import models
+from django.db.models.functions import Lower
+
 class Product(models.Model):
-    name=models.CharField(max_length=100)
-    image=models.ImageField(upload_to='product_images/', blank=True, null=True)
-    weight=models.CharField(max_length=50,default='1kg')
-    mrp=models.DecimalField(max_digits=10, decimal_places=2)
-    
+    name = models.CharField(max_length=100)
+    weight = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower('name'),
+                Lower('weight'),
+                name='unique_product_variant_case_insensitive'
+            )
+        ]
+
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.weight})"
+    
 class Inventory(models.Model):
     product=models.ForeignKey(Product, on_delete=models.CASCADE, related_name='inventories')
     shop=models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='inventory')

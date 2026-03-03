@@ -12,6 +12,7 @@ router.register(r'products', ProductViewSet, basename='products')
 router.register(r'inventory', InventoryViewSet, basename='inventory')
 router.register(r'auth', AuthViewSet, basename='auth')
 urlpatterns = [
+     path('search/', GlobalSearchView.as_view(), name='global-search'),
     path('', include(router.urls)),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

@@ -1,15 +1,28 @@
+from psycopg2 import IntegrityError
 from rest_framework import serializers
 from .models import *
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = '__all__'
+
     def validate_mrp(self, value):
         if value <= 0:
-            raise serializers.ValidationError("MRP must be a positive number.")
+            raise serializers.ValidationError(
+                "MRP must be a positive number."
+            )
         return value
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError(
+                "This product variant already exists in catalogue."
+            )
 class ShopSerializer(serializers.ModelSerializer):
     total_products=serializers.IntegerField(read_only=True)
     owner=serializers.ReadOnlyField(source='owner.username')
