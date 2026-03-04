@@ -15,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
                 "MRP must be a positive number."
             )
         return value
-
+    
     def create(self, validated_data):
         try:
             return super().create(validated_data)
@@ -54,17 +54,19 @@ class InventorySerializer(serializers.ModelSerializer):
             'shop_owner',
             'selling_price',
             'stock_count'
-        ]
+        ]  
 
     def validate_stock_count(self, value):
         if value < 0:
             raise serializers.ValidationError("Stock count cannot be negative.")
+       
         return value
 
     def validate_selling_price(self, value):
         if value <= 0:
             raise serializers.ValidationError("Selling price must be positive.")
         return value
+        
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
