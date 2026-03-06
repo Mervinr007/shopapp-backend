@@ -1,6 +1,7 @@
 from psycopg2 import IntegrityError
 from rest_framework import serializers
 from .models import *
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -59,7 +60,7 @@ class InventorySerializer(serializers.ModelSerializer):
     def validate_stock_count(self, value):
         if value < 0:
             raise serializers.ValidationError("Stock count cannot be negative.")
-       
+        
         return value
 
     def validate_selling_price(self, value):

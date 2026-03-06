@@ -9,6 +9,11 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+from django.dispatch import receiver
+from allauth.socialaccount.signals import social_account_added
+
+# Custom adapter to pass JWT in redirect
+
 
 from pathlib import Path
 
@@ -54,11 +59,21 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
 ]
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SITE_ID = 1
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -119,6 +134,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
+
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
@@ -170,6 +186,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 MEDIA_ROOT = BASE_DIR / 'media'
-LOGIN_REDIRECT_URL = "http://localhost:4200/shops"
+LOGIN_REDIRECT_URL ='/oauth/complete/'
 LOGOUT_REDIRECT_URL = "http://localhost:4200/"
