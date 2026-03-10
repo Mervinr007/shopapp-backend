@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from django.core.exceptions import ValidationError
+from django.db.models.functions import Lower
 class Shop(models.Model):
     name=models.CharField(max_length=100)
     address=models.CharField(max_length=255)
@@ -9,9 +10,6 @@ class Shop(models.Model):
     
     def __str__(self):
         return self.name
-
-from django.db import models
-from django.db.models.functions import Lower
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -45,3 +43,14 @@ class Inventory(models.Model):
         unique_together = ('product', 'shop')
     def __str__(self):
         return f"{self.product.name} - {self.shop.name}"
+    
+class UserPreference(models.Model):
+    THEME_CHOICES = [
+        ('light', 'Light'),
+        ('dark', 'Dark'),
+    ]
+    user  = models.OneToOneField(User, on_delete=models.CASCADE, related_name='preference')
+    theme = models.CharField(max_length=10, choices=THEME_CHOICES, default='light')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.theme}"

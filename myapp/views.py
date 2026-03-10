@@ -92,13 +92,14 @@ class AuthViewSet(viewsets.ViewSet):
         user = request.user
         old_password = request.data.get("old_password")
         new_password = request.data.get("new_password")
-
+        
         if not user.check_password(old_password):
             return Response({"error": "Old password incorrect"}, status=400)
+        if user.check_password(new_password):
+            return Response({"error":"New password must not be the same as old password"},status=400)
 
         user.set_password(new_password)
         user.save()
-
         return Response({"message": "Password updated successfully"})
 
     @action(detail=False, methods=['post'])
@@ -114,4 +115,20 @@ class AuthViewSet(viewsets.ViewSet):
                 {"error": "Invalid token or token already blacklisted"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-            
+class UserPreferenceViewSet(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        preference, _ = UserPreference.objects.get_or_create(user=request.user)
+        serializer = UserPreferenceSerializer(preference)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['patch'])
+    def update_theme(self, request):
+        preference, _ = UserPreference.objects.get_or_create(user=request.user)
+        serializer = UserPreferenceSerializer(preference, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)

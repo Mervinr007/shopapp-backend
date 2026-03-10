@@ -11,6 +11,7 @@ router.register(r'shops', ShopViewSet, basename='shops')
 router.register(r'products', ProductViewSet, basename='products')
 router.register(r'inventory', InventoryViewSet, basename='inventory')
 router.register(r'auth', AuthViewSet, basename='auth')
+router.register(r'preferences', UserPreferenceViewSet, basename='preferences')
 urlpatterns = [
      path('search/', GlobalSearchView.as_view(), name='global-search'),
     path('', include(router.urls)),

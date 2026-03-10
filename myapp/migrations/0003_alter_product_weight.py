@@ -16,3 +16,4 @@ class Migration(migrations.Migration):
             field=models.CharField(default='1kg', max_length=50),
         ),
     ]
+

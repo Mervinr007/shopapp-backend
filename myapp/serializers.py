@@ -93,4 +93,14 @@ class OwnerShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
         fields = '__all__'
-        
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['username'] = user.username
+        return token
+    
+class UserPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserPreference
+        fields = ['theme']
