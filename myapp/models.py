@@ -54,3 +54,24 @@ class UserPreference(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.theme}"
+class ActivityLog(models.Model):
+    ACTION_CHOICES=[
+        ('shop_created', 'Shop Created'),
+        ('shop_updated', 'Shop Updated'),
+        ('shop_deleted', 'Shop Deleted'),
+        ('product_created','Product Created'),
+        ('product_updated', 'Product Updated'),
+        ('inventory_added', 'Addded to Shop'),
+        ('inventory_updated', 'Stock Updated'),
+        ('inventory_removed', 'Removed from Shop'),
+        ('password_changed', 'Password Changed')
+    ]
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='activities')
+    action=models.CharField(max_length=50, choices=ACTION_CHOICES)
+    message=models.TextField()
+    timestamp=models.DateTimeField(auto_now_add=True)
+       
+    class Meta:
+        ordering=['-timestamp']
+    def __str__(self):
+        return f"{self.user.username}-{self.action}-{self.timestamp}"

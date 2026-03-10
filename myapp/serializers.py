@@ -104,3 +104,9 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = ['theme']
+class ActivityLogSerializer(serializers.ModelSerializer):
+    username=serializers.ReadOnlyField(source='user.username')
+    class Meta:
+        model=ActivityLog
+        fields=['id','username','action','message','timestamp']
+        
