@@ -8,6 +8,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('myapp.urls')),
     path('accounts/', include('allauth.urls')),
-     path('oauth/complete/', google_callback_complete),
+    path('oauth/complete/', google_callback_complete),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

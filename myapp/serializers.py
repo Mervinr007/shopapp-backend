@@ -55,7 +55,7 @@ class InventorySerializer(serializers.ModelSerializer):
             'shop_owner',
             'selling_price',
             'stock_count'
-        ]  
+        ]
 
     def validate_stock_count(self, value):
         if value < 0:
@@ -88,11 +88,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
-class OwnerShopSerializer(serializers.ModelSerializer):
-    total_products=serializers.IntegerField()
-    class Meta:
-        model = Shop
-        fields = '__all__'
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -109,4 +104,5 @@ class ActivityLogSerializer(serializers.ModelSerializer):
     class Meta:
         model=ActivityLog
         fields=['id','username','action','message','timestamp']
+        
         
